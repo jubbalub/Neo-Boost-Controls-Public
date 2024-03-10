@@ -1,0 +1,462 @@
+Code "Brake" By "Lex"
+//
+    #lib "Player"
+    #lib "Sonic"
+	
+	#include "BlackboardStatus" noemit
+		
+	
+//
+	if (IS_WORLD_FLAG(IsCyberSpace))
+	{
+		if (Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSliding && Player.Input.IsReleased(Player.InputActionType.PlayerStomping))
+		{
+			Player.State.SetState<Sonic.StateID>(Player.State.GetPreviousStateID<Sonic.StateID>());
+		}
+		else if (Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSliding && !Player.Status.IsGrounded())
+		{
+			Player.State.SetState<Sonic.StateID>(Sonic.StateID.StateFall);
+		}
+	}
+	
+
+Code "Cannon Fix" by "Lex" 
+//
+    #include "Reflection" noemit
+
+    #lib "Player"
+    #lib "BlackboardStatus" 
+	#lib "Reflection"
+    #lib "SonicParameters"
+//
+{
+    var SonicParametersInfo = Reflection.GetDataInfo<SonicParameters.Root>("player_common");
+	
+	if (SonicParametersInfo.pData == null)
+	return;
+
+    if (Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSpringJump || Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateJumpBoardLaunch)
+    {
+        RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.maxFallSpeed, 30.0f);
+    }
+    else
+    {
+        RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.maxFallSpeed, 60.0f);
+    }
+}
+
+Code "Adaptive Physics Changes" by "Trepe" does "Change Physics depending on the situation."
+//
+	#include "BlackboardStatus" noemit
+	#include "Reflection" noemit
+
+	#lib "Player"
+	#lib "Reflection"
+	#lib "SonicParameters"
+//
+{
+	if (IS_WORLD_FLAG(IsCyberSpace) && !Player.Status.IsSideView()) 	                         // If it's Cyberspace and NOT 2D
+	{
+		var SonicParametersInfo = Reflection.GetDataInfo<SonicParameters.Root>("player_common"); // Setup RFL changes for Sonic
+
+		if (SonicParametersInfo.pData == null)													 // Setup RFL changes for Sonic
+			return;																				 // Setup RFL changes for Sonic
+
+		float mag = Player.Kinematics.GetMagnitude(); 											 // Reads Sonic's Velocity
+		float horzMag = Player.Kinematics.GetHorizontalMagnitude(); 							 // Reads Sonic's Horizontal Velocity
+
+		if (horzMag >= 60) 																		 // If Sonic's Horizontal Velocity <= 5m/s
+		{
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.boost.initial, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.boost.min, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.boost2.initial, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.boost2.min, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.startHSpeed, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.startHSpeedMax, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.minHSpeed, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.minHSpeedMax, horzMag);
+		}
+		else if (horzMag < 60) 
+		{
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.boost.initial, 60.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.boost.min, 60.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.boost2.initial, 60.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.boost2.min, 60.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.startHSpeed, 60.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.startHSpeedMax, 60.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.minHSpeed, 60.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.minHSpeedMax, 60.0f);
+		}
+	}
+	
+	if (IS_WORLD_FLAG(IsCyberSpace) && Player.Status.IsSideView()) 	                         // If it's Cyberspace and 2D
+	{
+		var SonicParametersInfo = Reflection.GetDataInfo<SonicParameters.Root>("player_common"); // Setup RFL changes for Sonic
+
+		if (SonicParametersInfo.pData == null)													 // Setup RFL changes for Sonic
+			return;																				 // Setup RFL changes for Sonic
+
+		float mag = Player.Kinematics.GetMagnitude(); 											 // Reads Sonic's Velocity
+		float horzMag = Player.Kinematics.GetHorizontalMagnitude(); 							 // Reads Sonic's Horizontal Velocity
+
+		if (horzMag >= 33) 																		 // If Sonic's Horizontal Velocity <= 5m/s
+		{
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.speed.boost.initial, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.speed.boost.min, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.speed.boost2.initial, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.speed.boost2.min, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.grind.maxSpeed, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.grind.maxBoostSpeed, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.airboost.startHSpeed, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.airboost.startHSpeedMax, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.airboost.minHSpeed, horzMag);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.airboost.minHSpeedMax, horzMag);
+		}
+		else if (horzMag < 33) 
+		{
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.speed.boost.initial, 33.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.speed.boost.min, 33.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.speed.boost2.initial, 33.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.speed.boost2.min, 33.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.grind.maxSpeed, 33.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.grind.maxBoostSpeed, 33.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.airboost.startHSpeed, 33.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.airboost.startHSpeedMax, 33.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.airboost.minHSpeed, 33.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.airboost.minHSpeedMax, 33.0f);
+		}
+	}
+}
+
+Code "Allow Boost to Damage Objects" in "Gameplay/Skills" by "Hyper & NM" does "Allows the player to damage enemies and harder physics objects by boosting through them." 
+//
+    #include "BlackboardStatus" noemit
+
+    #lib "Player"
+
+    using System.Collections.Generic;
+
+    static bool _isBoostPrevious = false;
+
+    static List<Sonic.StateID> _boostStates = new()
+    {
+        Sonic.StateID.StateAirBoost,
+        Sonic.StateID.StateBumpJump,
+        Sonic.StateID.StateGrind,
+        Sonic.StateID.StateGrindDamage,
+        Sonic.StateID.StateGrindJump,
+        Sonic.StateID.StateGrindRoot,
+        Sonic.StateID.StateGrindStep,
+        Sonic.StateID.StateJump,
+        Sonic.StateID.StateLeftStepRun,
+        Sonic.StateID.StateRightStepRun,
+        Sonic.StateID.StateRun,
+        Sonic.StateID.StateWallMove
+    };
+//
+{
+    Sonic.StateID NotifyStateRunDamageCollision(Sonic.StateID in_stateId, Sonic.StateID[] in_stateStackTrace)
+    {
+        if (_boostStates.Contains(in_stateId) && IS_STATE_FLAG(IsBoost) && IS_WORLD_FLAG(IsCyberSpace))
+        {
+            Player.Collision.SetCollisionSphere(Player.CollisionType.Damage, 1.0f);
+            Player.Collision.SetEntityCollision(false);
+            _isBoostPrevious = true;
+        }
+        else if (_isBoostPrevious)
+        {
+            Player.Collision.SetCollisionSphere(Player.CollisionType.Default, 1.0f);
+            Player.Collision.SetEntityCollision(true);
+            _isBoostPrevious = false;
+        }
+
+        return in_stateId;
+    }
+
+    Player.State.AddStateNotifyAction<Sonic.StateID>(NotifyStateRunDamageCollision);
+}
+
+Code "Fix Air Boost Reset" in "Fixes/Gameplay" by "Hyper & Weezley" does "Allows Sonic to perform another Air Boost after previously using it before performing a homing attack, stomp, or using a spring." 
+//
+    #include "BlackboardStatus" noemit
+
+    #lib "Bitwise"
+    #lib "BlackboardStatus"
+    #lib "Player"
+    #lib "HMM"
+
+    using System.Collections.Generic;
+
+    static List<Sonic.StateID> AllowedStates = new()
+    {
+        Sonic.StateID.StateHomingFinished,
+        Sonic.StateID.StateSpringJump,
+        Sonic.StateID.StateStompingBounce,
+        Sonic.StateID.StateStompingFlip,
+        Sonic.StateID.StateUpDownPole,
+        Sonic.StateID.StateUpDownPoleDamage
+    }
+
+    static List<Sonic.StateID> DisallowedStates = new()
+    {
+        Sonic.StateID.StateAirBoost,
+        Sonic.StateID.StateAuraTrain,
+        Sonic.StateID.StateGrindStep,
+        Sonic.StateID.StateJumpBoardLaunch,
+        Sonic.StateID.StateCaught,
+        Sonic.StateID.StateSpinBoost
+    }
+
+    static List<Sonic.StateID> DontAirBoost = new()
+    {
+        Sonic.StateID.StateGrindStep,
+        Sonic.StateID.StateHoldStand,
+        Sonic.StateID.StateHangPole,
+        Sonic.StateID.StateUpDownPole,
+        Sonic.StateID.StateUpDownPoleDamage
+    }
+
+    static bool _isInitialised = false;
+    static bool _isRestoredAirBoost = false;
+    static bool doNotAirBoost = false;
+    static bool noCycloneStart = false;
+    static bool noSpinStart = false;
+//
+{
+    bool playerPowerBoost = IS_WORLD_FLAG(IsPowerBoost);
+
+    if (!_isInitialised)
+    {
+        foreach (var code in HMM.GetCodes())
+        {
+            if (code == "Disable Card Spin Boost Transition")
+            {
+                noSpinStart = true;
+                break;
+            }
+
+            if (code == "Disable Cyclone Transition")
+            {
+                noCycloneStart = true;
+                break
+            }
+        }
+
+        Sonic.StateID NotifyAirBoostReset(Sonic.StateID in_stateId, Sonic.StateID[] in_stateStackTrace)
+        {
+            // Reset flag for StateAirBoost or when the player is grounded.
+            if (DisallowedStates.Contains(in_stateId) || Player.Status.IsGrounded())
+            {
+                _isRestoredAirBoost = false;
+                return in_stateId;
+            }
+
+            foreach (var state in AllowedStates)
+            {
+                if (state == in_stateId)
+                _isRestoredAirBoost = true;
+            }
+
+            if (DontAirBoost.Contains(in_stateId))
+            {
+                doNotAirBoost = true;
+                return in_stateId;
+            }
+            else
+            {
+                doNotAirBoost = false;
+                return in_stateId;
+            }
+
+            return in_stateId;
+        }
+
+        Player.State.AddStateNotifyAction<Sonic.StateID>(NotifyAirBoostReset);
+
+        _isInitialised = true;
+    }
+
+    // Disable restored air boost for Super Sonic.
+    if (BlackboardStatus.IsSuper())
+        _isRestoredAirBoost = false;
+
+    // Disable restored air boost for diving.
+    if (IS_STATE_FLAG(IsDiving))
+        _isRestoredAirBoost = false;
+
+    // Disable restored air boost for skateboarding.
+    if (IS_STATE_FLAG(IsBoarding))
+        _isRestoredAirBoost = false;
+
+    // Disable restored air boost for when the player is dead.
+    if (IS_WORLD_FLAG(IsDead))
+        _isRestoredAirBoost = false;
+
+    if (Player.Input.IsPressed(Player.InputActionType.PlayerBoost) && !Player.Status.IsGroundedSpecial() && _isRestoredAirBoost && !doNotAirBoost)
+    {
+        // Exit into Air Boost depending on current character.
+        if (playerPowerBoost)
+        {
+            if (Player.GetPlayerType() == Player.PlayerType.Tails)
+            {
+                Player.State.SetState<Tails.StateID>(noCycloneStart ? Tails.StateID.StateAirBoostCyclone : Tails.StateID.StateCycloneAppear);
+            }
+            else if (Player.GetPlayerType() == Player.PlayerType.Amy)
+            {
+                Player.State.SetState<Amy.StateID>(noSpinStart ? Amy.StateID.AmyStateTarotBoost : Amy.StateID.AmyStateTarotBuildAir);
+            }
+            else if (Player.GetPlayerType() == Player.PlayerType.Knuckles)
+            {
+                Player.State.SetState<Knuckles.StateID>(Knuckles.StateID.KnucklesStateDrillBoostAir)
+            }
+            else
+            {
+                Player.State.SetState<Sonic.StateID>(Sonic.StateID.StateAirBoost);
+            }
+        }
+        else
+        {
+            Player.State.SetState<Sonic.StateID>(Sonic.StateID.StateAirBoost);
+        }
+
+        _isRestoredAirBoost = false;
+    }
+}
+
+Patch "Retain Horizontal Velocity from Jump" in "Physics" by "Hyper" does 
+/*
+Retains the player's horizontal velocity when jumping.
+
+Notes;
+- This will allow you to retain velocity when jumping out of a Drop Dash.
+- The "Jump Deceleration" and "Maintain boost during a jump" options can remain active without conflicting with this code.
+*/
+//
+    #lib "Memory"
+    #lib "Player"
+	#lib "BlackboardStatus" 
+	#lib "Sonic"
+	
+	#include "BlackboardStatus" noemit
+
+    static bool _isStateJump = false;
+//
+{
+		fixed (bool* p_isStateJump = &_isStateJump)
+		{
+			// Update posture to allow retaining ground velocity.
+			WriteAsmHook
+			(
+				$@"
+					mov   rdi, rcx
+					mov   rdx, {(long)p_isStateJump}
+					cmp   byte ptr [rdx], 0
+					je    default
+					mov   al, 1
+					jmp   exit
+				default:
+					xor   edx, edx
+					mov   rcx, [rcx + 0x28] ; RCX = BlackboardStatus
+					mov   eax, edx
+					and   eax, 0x3F
+					movzx r8d, al
+					mov   eax, edx
+					shr   rax, 6
+					mov   rax, [rcx + rax * 8 + 0x38]
+					bt    rax, r8
+					setb  al
+				exit:
+				",
+
+				/* 0x1408B4846 */
+				Memory.ReadCall
+				(
+					/* 0x1408F1A2C */
+					ScanSignature
+					(
+						"\xE8\xCC\xCC\xCC\xCC\x48\x8B\x43\x20\xBA\x20\x16\x1E\x71\x44\x0F\x28\xC0\x48\x8B\x88\x80\x00\x00\x00\xE8\xCC\xCC\xCC\xCC\x48\x8B\xC8\xE8\xCC\xCC\xCC\xCC\x48\x8B\xCB\x0F\x28\xF8\xE8\xCC\xCC\xCC\xCC\x48\x8B\xC8\xE8\xCC\xCC\xCC\xCC\x48\x8D\x55\xE7",
+						"x????xxxxxxxxxxxxxxxxxxxxx????xxxx????xxxxxxx????xxxx????xxxx"
+					)
+				)
+				+ 6,
+
+				HookBehavior.Replace
+			);
+		}
+
+		
+		Sonic.StateID NotifyStateJump(Sonic.StateID in_stateId, Sonic.StateID[] in_stateStackTrace)
+		{
+			_isStateJump =  (in_stateId == Sonic.StateID.StateJump) || (in_stateId == Sonic.StateID.StateGrindJump);
+			
+			return in_stateId;
+		}
+		
+		Player.State.AddStateNotifyAction<Sonic.StateID>(NotifyStateJump);
+}
+
+Code "fx"
+//
+    #lib "Sonic"
+    #lib "Player"
+	#lib "Lua"
+	#lib "BlackboardStatus"
+	#lib "Bitwise"
+    #include "BlackboardStatus" noemit
+
+    static bool boostEffects = false;
+    static bool slideEffects = false;
+//
+{
+	var pBlackboardStatus = BlackboardStatus.Get();
+    if (pBlackboardStatus == null) 
+	{
+        return;
+    }
+
+    if (BlackboardStatus.Get() == null) 
+	{
+        return;
+    }
+	
+    if (Player.GetPlayerType() != Player.PlayerType.Sonic) 
+	{
+        return;
+    }
+
+    bool isBoost = IS_STATE_FLAG(IsBoost);
+
+	if (IS_WORLD_FLAG(IsCyberSpace)) 
+	{
+		Lua.Call("LoadLevel", "warship01")
+		if (isBoost && Player.State.GetCurrentStateID<Sonic.StateID>() != Sonic.StateID.StateSpinBoost && !boostEffects) 
+		{
+			Player.Effect.PlayEffect("cyber1", "ec_mbo_warship01_accelplayer01_spark04")
+            Player.Effect.PlayEffect("cyber2", "ec_mbo_warship01_front_air01")
+			Player.Effect.PlayEffect("burst1", "ec_so_boost_impact_fv02_par01.cemt");
+			Player.Effect.PlayEffect("burst2", "ec_so_boost_impact_fv02_plight01.cemt");
+			Player.Effect.PlayEffect("burst3", "ec_so_boost_impact_fv02.cemt");
+			boostEffects = true;
+		}
+		if (!isBoost || Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSpinBoost && boostEffects) 
+		{
+			Player.Effect.StopEffect("cyber1");
+			Player.Effect.StopEffect("cyber2");
+			Player.Effect.StopEffect("burst1");
+			Player.Effect.StopEffect("burst2");
+			Player.Effect.StopEffect("burst3");
+			boostEffects = false;
+		}
+		
+		if (Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSliding && !slideEffects)
+		{
+			Player.Effect.PlayEffect("dust", "ef_ft_spinboost_charge01_sa01")
+			slideEffects = true;
+		}
+		else
+		{
+			Player.Effect.StopEffect("dust");
+			slideEffects = false;
+		}
+	}
+}
