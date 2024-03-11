@@ -1,4 +1,2 @@
 add mod.ini
 add neo_boost_controls.hmm
-add root/raw/character/playercommon.pac
-add root/raw/script/script_resident.pac

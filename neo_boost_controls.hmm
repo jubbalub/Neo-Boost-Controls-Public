@@ -1,3 +1,25 @@
+Code "Disable Spindash"
+//
+    #lib "Player"
+	#lib "Sonic"
+	
+	#include "BlackboardStatus" noemit
+//
+{
+	if (IS_WORLD_FLAG(IsCyberSpace))
+	{
+		Player.State.Discard<Sonic.StateID>(Sonic.StateID.StateSpinBoost);
+		Player.State.Discard<Sonic.StateID>(Sonic.StateID.StateSpinBoostCharge);
+		Player.State.Discard<Sonic.StateID>(Sonic.StateID.StateSpinMove);
+	}
+	else
+	{
+		Player.State.Restore<Sonic.StateID>(Sonic.StateID.StateSpinBoost);
+		Player.State.Restore<Sonic.StateID>(Sonic.StateID.StateSpinBoostCharge);
+		Player.State.Restore<Sonic.StateID>(Sonic.StateID.StateSpinMove);
+	}
+}
+
 Code "Brake" By "Lex"
 //
     #lib "Player"
