@@ -1,2 +1,2 @@
-## Neo Boost Controls 1.0pre1
-- Pre-release 1
+## Neo Boost Controls 1.0
+- Initial release
