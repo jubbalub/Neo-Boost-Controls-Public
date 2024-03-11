@@ -1,2 +1,4 @@
 add mod.ini
 add neo_boost_controls.hmm
+add config.ini
+add config.json

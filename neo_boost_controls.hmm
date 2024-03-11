@@ -2,15 +2,48 @@ Code "Disable Spindash"
 //
     #lib "Player"
 	#lib "Sonic"
+	#lib "HMM"
+	#lib "INI"
 	
 	#include "BlackboardStatus" noemit
+	
+	using System.IO;
+	
+	static bool configInit = false;
+	static bool enableSpindash;
+	static string currentModDirectory;
 //
 {
-	if (IS_WORLD_FLAG(IsCyberSpace))
+	if (!configInit)
+	{
+		// thanks Hyper for this code
+        var mods = HMM.FindModsByName("Neo Boost Controls");
+        // Duplicates present, aborting!
+        if (mods.Count > 1)
+        {
+            // Skip config init on next loop, use default values.
+            configInit = true;
+            return;
+        }
+		currentModDirectory = mods[0].Path;
+        var configPath = Path.Combine(mods[0].Path, "config.ini");
+		var ini = INI.Read(configPath);
+		
+		enableSpindash = bool.Parse(ini["Main"]["enableSpindash"]);
+		configInit = true;
+    }
+	
+	if (IS_WORLD_FLAG(IsCyberSpace) && (!enableSpindash))
 	{
 		Player.State.Discard<Sonic.StateID>(Sonic.StateID.StateSpinBoost);
 		Player.State.Discard<Sonic.StateID>(Sonic.StateID.StateSpinBoostCharge);
 		Player.State.Discard<Sonic.StateID>(Sonic.StateID.StateSpinMove);
+	}
+	else if (IS_WORLD_FLAG(IsCyberSpace) && (enableSpindash))
+	{
+		Player.State.Restore<Sonic.StateID>(Sonic.StateID.StateSpinBoost);
+		Player.State.Restore<Sonic.StateID>(Sonic.StateID.StateSpinBoostCharge);
+		Player.State.Restore<Sonic.StateID>(Sonic.StateID.StateSpinMove);
 	}
 	else
 	{
