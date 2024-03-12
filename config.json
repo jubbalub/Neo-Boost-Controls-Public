@@ -1,22 +1,40 @@
 {
    "Groups": [
-      {
-         "Name": "Main",
-         "DisplayName": "Neo Boost Controls",
-        "Elements": [
-          {
-            "Name": "enableSpindash",
-            "DisplayName": "Restore Spin Dash",
-            "Description": [
-              "Restores the Spin Dash in Cyber Space, if unlocked.",
-			  "",
-              "NOTE: this mod is not balanced around the spindash, and unexpected issues may occur."
-            ],
-            "Type": "bool",
-            "DefaultValue": "false"
-          }
-        ]
-      }
+		{
+			"Name": "Main",
+			"DisplayName": "Neo Boost Controls",
+			"Elements": [
+				{
+					"Name": "enableBoostVFX",
+					"DisplayName": "Boost VFX",
+					"Description": [
+						"Adds cyber visual effects to Sonic when boosting."
+					],
+					"Type": "bool",
+					"DefaultValue": "true",
+				},
+				{
+					"Name": "enableSlideVFX",
+					"DisplayName": "Slide VFX",
+					"Description": [
+						"Adds dust cloud particles to Sonic when sliding/braking."
+					],
+					"Type": "bool",
+					"DefaultValue": "true",
+				},
+				{
+					"Name": "enableSpindash",
+					"DisplayName": "Restore Spin Dash",
+					"Description": [
+						"Restores the Spin Dash in Cyber Space, if unlocked.",
+						"",
+						"NOTE: this mod is not balanced around the spindash, and unexpected issues may occur."
+					],
+					"Type": "bool",
+					"DefaultValue": "false"
+				}
+			]
+		}
    ],
    "IniFile": "config.ini"
 }
