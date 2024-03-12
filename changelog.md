@@ -4,6 +4,7 @@
 - Removed the rev gimmick from 4-G (probably temporary)
 - Increased the gravity in 4-I
 - Custom boost VFX is now hidden when using the Rocket Boost
+- Fixed missing rank timings in 3-1
 
 ## Neo Boost Controls 1.0.1
 - Added a configuration file with an option to re-enable the Spin Dash if unlocked
