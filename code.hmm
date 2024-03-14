@@ -446,7 +446,104 @@ Notes;
 		Player.State.AddStateNotifyAction<Sonic.StateID>(NotifyStateJump);
 }
 
-Code "VFX"
+Code "Initial Boost Drain" in "Gameplay" by "Weezley"
+//
+	#include "BlackboardStatus" noemit
+	#include "Reflection" noemit
+
+	#lib "AmyParameters"
+	#lib "KnucklesParameters"
+	#lib "Reflection"
+	#lib "SonicParameters"
+	#lib "TailsParameters"
+	#lib "Time"
+
+	static float boostTime = 0.0f;
+	static float boostConsume = 0.05f;
+//
+{
+	Time.GetDeltaTime();
+
+	bool isBoosting = IS_STATE_FLAG(IsBoost);
+	bool isSpinDash = Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSpinBoost;
+
+	var SonicParametersInfo = Reflection.GetDataInfo<SonicParameters.Root>("player_common");
+	var AmyParametersInfo = Reflection.GetDataInfo<AmyParameters.Root>("amy_common");
+	var KnucklesParametersInfo = Reflection.GetDataInfo<KnucklesParameters.Root>("knuckles_common");
+	var TailsParametersInfo = Reflection.GetDataInfo<TailsParameters.Root>("tails_common");
+	
+	if (!IS_WORLD_FLAG(IsCyberSpace))
+	{
+		return;
+	}
+
+	if (!isBoosting)
+	{
+		boostTime = 0.0f;
+	}
+	else
+	{
+		if (boostTime < boostConsume)
+		{
+			boostTime += Time.GetDeltaTime();
+		}
+	}
+
+	if (boostTime >= boostConsume)
+	{	
+		if (SonicParametersInfo.pData != null)
+		{
+			RFL_SET_PARAM(SonicParametersInfo, forwardView.modePackage.boost.consumptionRate, isSpinDash ? 11.25f : 5.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.boost.consumptionRate, isSpinDash ? 20.25f : 9.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspaceSV.modePackage.boost.consumptionRate, isSpinDash ? 20.25f : 9.0f);
+		}
+		
+		if (AmyParametersInfo.pData != null)
+		{
+			RFL_SET_PARAM(AmyParametersInfo, forwardView.modePackage.boost.consumptionRate, isSpinDash ? 9.0f : 4.5f);
+			RFL_SET_PARAM(AmyParametersInfo, cyberspaceSV.modePackage.boost.consumptionRate, isSpinDash ? 15.0f : 7.5f);
+		}
+		
+		if (KnucklesParametersInfo.pData != null)
+		{
+			RFL_SET_PARAM(KnucklesParametersInfo, forwardView.modePackage.boost.consumptionRate, isSpinDash ? 9.0f : 4.5f);
+			RFL_SET_PARAM(KnucklesParametersInfo, cyberspaceSV.modePackage.boost.consumptionRate, isSpinDash ? 15.0f : 7.5f);
+		}
+		
+		if (TailsParametersInfo.pData != null)
+		{
+			RFL_SET_PARAM(TailsParametersInfo, forwardView.modePackage.boost.consumptionRate, isSpinDash ? 9.0f : 4.5f);
+			RFL_SET_PARAM(TailsParametersInfo, cyberspaceSV.modePackage.boost.consumptionRate, isSpinDash ? 15.0f : 7.5f);
+		}
+	}
+	else
+	{
+		if (SonicParametersInfo.pData != null)
+		{
+			RFL_SET_CONTEXTUAL_PLAYER_PARAM(SonicParametersInfo, modePackage.boost.consumptionRate, 97.0f);
+		}
+
+		if (AmyParametersInfo.pData != null)
+		{
+			RFL_SET_PARAM(AmyParametersInfo, forwardView.modePackage.boost.consumptionRate, 90.0f);
+			RFL_SET_PARAM(AmyParametersInfo, cyberspaceSV.modePackage.boost.consumptionRate, 90.0f);
+		}
+
+		if (KnucklesParametersInfo.pData != null)
+		{
+			RFL_SET_PARAM(KnucklesParametersInfo, forwardView.modePackage.boost.consumptionRate, 90.0f);
+			RFL_SET_PARAM(KnucklesParametersInfo, cyberspaceSV.modePackage.boost.consumptionRate, 90.0f);
+		}
+
+		if (TailsParametersInfo.pData != null)
+		{
+			RFL_SET_PARAM(TailsParametersInfo, forwardView.modePackage.boost.consumptionRate, 90.0f);
+			RFL_SET_PARAM(TailsParametersInfo, cyberspaceSV.modePackage.boost.consumptionRate, 90.0f);
+		}
+	}
+}
+
+Code "VFX and SFX"
 //
     #lib "Sonic"
     #lib "Player"
@@ -455,14 +552,24 @@ Code "VFX"
 	#lib "Bitwise"
     #include "BlackboardStatus" noemit
 	
+	#load "PresentationCore.dll"
+    #load "PresentationFramework.dll"
+	#load "WindowsBase.dll"
+	
+	using System;
 	using System.IO;
+	using System.Media;
+    using System.Windows.Media;
 
     static bool configInit = false;
     static bool boostEffects = false;
     static bool slideEffects = false;
+	static bool boostSound = false;
+	static bool enableBoostSound;
 	static bool enableBoostVFX;
 	static bool enableSlideVFX;
 	static string currentModDirectory;
+	static MediaPlayer boostSFX = new MediaPlayer();
 //
 {
 	if (!configInit)
@@ -480,6 +587,7 @@ Code "VFX"
         var configPath = Path.Combine(mods[0].Path, "config.ini");
 		var ini = INI.Read(configPath);
 		
+		enableBoostSound = bool.Parse(ini["Main"]["enableBoostSound"]);
 		enableBoostVFX = bool.Parse(ini["Main"]["enableBoostVFX"]);
 		enableSlideVFX = bool.Parse(ini["Main"]["enableSlideVFX"]);
 		configInit = true;
@@ -506,40 +614,37 @@ Code "VFX"
 
 	if (IS_WORLD_FLAG(IsCyberSpace))
 	{
-		if (enableBoostVFX)
+		Lua.Call("LoadLevel", "warship01")
+		if (isBoost && Player.State.GetCurrentStateID<Sonic.StateID>() != Sonic.StateID.StateSpinBoost && !boostEffects) 
 		{
-			Lua.Call("LoadLevel", "warship01")
-			if (isBoost && Player.State.GetCurrentStateID<Sonic.StateID>() != Sonic.StateID.StateSpinBoost && !boostEffects) 
+			if (isNitroBoost || !enableBoostVFX)
 			{
-				if (isNitroBoost)
-				{
-					return;
-				}
-				Player.Effect.PlayEffect("cyber1", "ec_mbo_warship01_accelplayer01_spark04")
-				Player.Effect.PlayEffect("cyber2", "ec_mbo_warship01_front_air01")
-				Player.Effect.PlayEffect("burst1", "ec_so_boost_impact_fv02_par01.cemt");
-				Player.Effect.PlayEffect("burst2", "ec_so_boost_impact_fv02_plight01.cemt");
-				Player.Effect.PlayEffect("burst3", "ec_so_boost_impact_fv02.cemt");
-				boostEffects = true;
+				return;
 			}
-			if (isBoost && isNitroBoost)
-			{
-				Player.Effect.StopEffect("cyber1");
-				Player.Effect.StopEffect("cyber2");
-				Player.Effect.StopEffect("burst1");
-				Player.Effect.StopEffect("burst2");
-				Player.Effect.StopEffect("burst3");
-				boostEffects = false;
-			}
-			if (!isBoost || Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSpinBoost && boostEffects) 
-			{
-				Player.Effect.StopEffect("cyber1");
-				Player.Effect.StopEffect("cyber2");
-				Player.Effect.StopEffect("burst1");
-				Player.Effect.StopEffect("burst2");
-				Player.Effect.StopEffect("burst3");
-				boostEffects = false;
-			}
+			Player.Effect.PlayEffect("cyber1", "ec_mbo_warship01_accelplayer01_spark04")
+			Player.Effect.PlayEffect("cyber2", "ec_mbo_warship01_front_air01")
+			Player.Effect.PlayEffect("burst1", "ec_so_boost_impact_fv02_par01.cemt");
+			Player.Effect.PlayEffect("burst2", "ec_so_boost_impact_fv02_plight01.cemt");
+			Player.Effect.PlayEffect("burst3", "ec_so_boost_impact_fv02.cemt");
+			boostEffects = true;
+		}
+		if (isBoost && isNitroBoost)
+		{
+			Player.Effect.StopEffect("cyber1");
+			Player.Effect.StopEffect("cyber2");
+			Player.Effect.StopEffect("burst1");
+			Player.Effect.StopEffect("burst2");
+			Player.Effect.StopEffect("burst3");
+			boostEffects = false;
+		}
+		if (!isBoost || Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSpinBoost && boostEffects) 
+		{
+			Player.Effect.StopEffect("cyber1");
+			Player.Effect.StopEffect("cyber2");
+			Player.Effect.StopEffect("burst1");
+			Player.Effect.StopEffect("burst2");
+			Player.Effect.StopEffect("burst3");
+			boostEffects = false;
 		}
 		
 		if (enableSlideVFX)
@@ -555,5 +660,55 @@ Code "VFX"
 				slideEffects = false;
 			}
 		}
+		
+		if (enableBoostSound)
+		{
+			if (isBoost && !boostSound)
+			{
+				boostSFX.Open(new Uri(Path.Combine(currentModDirectory, "boost.wav")));
+				boostSFX.Volume = 0.20;
+				boostSFX.Position = new TimeSpan(0);
+				boostSFX.Play();
+				boostSound = true;
+			}
+			if (!isBoost && boostSound)
+			{
+				if (boostSFX.Volume > 0)
+				{
+					boostSFX.Volume = boostSFX.Volume - 0.005
+				}
+				else if (boostSFX.Volume <= 0)
+				{
+					boostSFX.Stop()
+					boostSound = false;
+				}
+			}
+		}
+		
+		/*
+		
+		if (Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSliding && !slideSound)
+		{
+			slideSFX.Open(new Uri(Path.Combine(currentModDirectory, "slide.wav")));
+			slideSFX.Volume = 0.15;
+			slideSFX.Position = new TimeSpan(0);
+			slideSFX.Play();
+			slideSound = true;
+		}
+		if (Player.State.GetCurrentStateID<Sonic.StateID>() == !Sonic.StateID.StateSliding && slideSound)
+		{
+			if (slideSFX.Volume > 0)
+			{
+				slideSFX.Volume = slideSFX.Volume - 0.0033
+			}
+			else if (slideSFX.Volume <= 0)
+			{
+				slideSFX.Stop()
+				slideSound = false;
+			}
+		}
+		
+		*/
+		
 	}
 }

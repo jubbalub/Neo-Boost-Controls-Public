@@ -2,6 +2,4 @@ add mod.ini
 add code.hmm
 add config.ini
 add config.json
-add root/raw/character/playercommon.pac
-add root/raw/script/script_resident.pac
-delete neo_boost_controls.hmm
+add boost.wav

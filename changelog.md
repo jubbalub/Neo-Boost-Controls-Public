@@ -1,3 +1,7 @@
+## Neo Boost Controls 1.1.1
+- Added the classic boost background noise
+	- This can be disabled in the config menu
+
 ## Neo Boost Controls 1.1
 - Added rank timings for Another Story levels
 - Added two new config options to toggle VFX

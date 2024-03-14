@@ -5,8 +5,17 @@
 			"DisplayName": "Neo Boost Controls",
 			"Elements": [
 				{
+					"Name": "enableBoostSound",
+					"DisplayName": "Boost Sound Effect",
+					"Description": [
+						"Plays the boost background sound effect from Unleashed, Colors, Generations, and Forces."
+					],
+					"Type": "bool",
+					"DefaultValue": "true",
+				},
+				{
 					"Name": "enableBoostVFX",
-					"DisplayName": "Boost VFX",
+					"DisplayName": "Boost Visuals",
 					"Description": [
 						"Adds cyber visual effects to Sonic when boosting."
 					],
@@ -15,7 +24,7 @@
 				},
 				{
 					"Name": "enableSlideVFX",
-					"DisplayName": "Slide VFX",
+					"DisplayName": "Slide Visuals",
 					"Description": [
 						"Adds dust cloud particles to Sonic when sliding/braking."
 					],
