@@ -1,6 +1,8 @@
 ## Neo Boost Controls 1.1.1
 - Added the classic boost background noise
 	- This can be disabled in the config menu
+- Activating a boost will drain more boost initially, deterring spamming
+	- Huge thanks to Weezley for this feature!
 
 ## Neo Boost Controls 1.1
 - Added rank timings for Another Story levels
