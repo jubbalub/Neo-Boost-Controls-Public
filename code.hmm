@@ -1,7 +1,13 @@
 /*
 -------------------------------
 Neo Boost Gameplay
-Mod by jubbalub
+Mod made by jubbalub
+
+Huge thanks to the following people
+for lending me their code:
+LexStorm
+Trepe Serafin
+Weezley
 -------------------------------
 */
 
@@ -89,6 +95,7 @@ Code "Neo Boost main logic"
 		}
 	}
 	
+	// Boost damage collision code borrowed from HMM
 	Sonic.StateID NotifyStateRunDamageCollision(Sonic.StateID in_stateId, Sonic.StateID[] in_stateStackTrace)
     {
         if (_boostStates.Contains(in_stateId) && IS_STATE_FLAG(IsBoost) && IS_WORLD_FLAG(IsCyberSpace))
