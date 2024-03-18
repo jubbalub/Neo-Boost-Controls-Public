@@ -3,7 +3,7 @@
 - Added a new config option for boost damage hitstop.
 	- Min = 0 (none), Max = 20 (vanilla), Default = 0
 - Added a new config option for Nitro bottle collection hitstop.
-	- Min = 0 (none), Max = 15 (vanilla) Default = 0
+	- Min = 0 (none), Max = 15 (vanilla) Default = 7
 - The camera FOV in 3D Cyber Space levels is now wider to match the open-zone.
 	- *This feature replaces the gedit archives of every 3D Cyber Space level, and will cause problems with level mods.* Thus, the feature can be disabled in the config menu.
 - Sonic reaches the apex of his jump quicker, and the jump lasts slightly less time as a result.
