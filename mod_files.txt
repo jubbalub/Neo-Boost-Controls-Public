@@ -2,6 +2,7 @@ add mod.ini
 add code.hmm
 add config.ini
 add config.json
+add boost.wav
 add main/raw/character/playercommon.pac
 add main/raw/script/script_resident.pac
 add wider_fov/raw/gedit/w6d01_gedit.pac
