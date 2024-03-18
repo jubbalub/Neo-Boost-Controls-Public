@@ -2,13 +2,62 @@
    "Groups": [
 		{
 			"Name": "Main",
-			"DisplayName": "Neo Boost Controls",
+			"DisplayName": "Neo Boost Gameplay",
 			"Elements": [
+				{
+					"Name": "IncludeDir1",
+					"DisplayName": "Wider Camera FOV",
+					"Description": [
+						"Increases the camera FOV in 3D levels to match the open-zone.",
+						"",
+						"Default: True"
+					],
+					"Type": "widerFOVEnum",
+					"MinValue": null,
+					"MaxValue": null,
+					"DefaultValue": "wider_fov"
+				},
+				{
+					"Name": "nitroHitstopDuration",
+					"DisplayName": "Nitro Bottle Hitstop Duration",
+					"Description": [
+						"Sets the hitstop duration for collecting a Nitro bottle.",
+						"",
+						"NOTE: 0 still has a very miniscule amount of hitstop.",
+						"",
+						"Default = 10",
+						"Min = 0 (none)",
+						"Max = 15 (vanilla)"
+					],
+					"Type": "float",
+					"DefaultValue": "7",
+					"MinValue": "0",
+					"MaxValue": "15"
+				},
+				{
+					"Name": "hitstopDuration",
+					"DisplayName": "Boost Hitstop Duration",
+					"Description": [
+						"Sets the hitstop duration for boosting into enemies.",
+						"",
+						"NOTE: 0 still has a very miniscule amount of hitstop.",
+						"",
+						"Default = 0",
+						"Min = 0 (none)",
+						"Max = 20 (vanilla)"
+					],
+					"Type": "float",
+					"DefaultValue": "0",
+					"MinValue": "0",
+					"MaxValue": "20"
+				},
 				{
 					"Name": "enableBoostSound",
 					"DisplayName": "Boost Sound Effect",
 					"Description": [
-						"Plays the boost background sound effect from Unleashed, Colors, Generations, and Forces."
+						"Plays the boost background sound effect from Unleashed, Colors, Generations, and Forces.",
+						"",
+						"Default: True"
 					],
 					"Type": "bool",
 					"DefaultValue": "true",
@@ -17,7 +66,9 @@
 					"Name": "enableBoostVFX",
 					"DisplayName": "Boost Visuals",
 					"Description": [
-						"Adds cyber visual effects to Sonic when boosting."
+						"Adds cyber visual effects to Sonic when boosting.",
+						"",
+						"Default: True"
 					],
 					"Type": "bool",
 					"DefaultValue": "true",
@@ -26,7 +77,9 @@
 					"Name": "enableSlideVFX",
 					"DisplayName": "Slide Visuals",
 					"Description": [
-						"Adds dust cloud particles to Sonic when sliding/braking."
+						"Adds dust cloud particles to Sonic when sliding/braking.",
+						"",
+						"Default: True"
 					],
 					"Type": "bool",
 					"DefaultValue": "true",
@@ -37,7 +90,9 @@
 					"Description": [
 						"Restores the Spin Dash in Cyber Space, if unlocked.",
 						"",
-						"NOTE: this mod is not balanced around the spindash, and unexpected issues may occur."
+						"NOTE: this mod is not balanced around the spindash, and unexpected issues may occur.",
+						"",
+						"Default: False"
 					],
 					"Type": "bool",
 					"DefaultValue": "false"
@@ -45,5 +100,28 @@
 			]
 		}
    ],
-   "IniFile": "config.ini"
+  "Enums": {
+		"widerFOVEnum": 
+		[
+			{
+				"DisplayName": "True",
+				"Value": "wider_fov",
+				"Description": [
+					"Increases the camera volume FOV in 3D levels to match the open-zone.",
+					"",
+					"Default: True"
+				]
+			},
+			{
+				"DisplayName": "False",
+				"Value": "",
+				"Description": [
+					"Increases the camera volume FOV in 3D levels to match the open-zone.",
+					"",
+					"Default: True"
+				]
+			}
+		],
+   },
+   "IniFile": "mod.ini"
 }

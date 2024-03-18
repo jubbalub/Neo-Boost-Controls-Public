@@ -1,3 +1,10 @@
+/*
+-------------------------------
+Neo Boost Gameplay
+Mod by jubbalub
+-------------------------------
+*/
+
 Code "Neo Boost main logic"
 //
     #lib "Player"
@@ -35,7 +42,7 @@ Code "Neo Boost main logic"
 	if (!configInit)
 	{
 		// thanks Hyper for this code
-        var mods = HMM.FindModsByName("Neo Boost Controls");
+        var mods = HMM.FindModsByName("Neo Boost Gameplay");
         // Duplicates present, aborting!
         if (mods.Count > 1)
         {
@@ -44,7 +51,7 @@ Code "Neo Boost main logic"
             return;
         }
 		currentModDirectory = mods[0].Path;
-        var configPath = Path.Combine(mods[0].Path, "config.ini");
+        var configPath = Path.Combine(mods[0].Path, "mod.ini");
 		var ini = INI.Read(configPath);
 		
 		enableSpindash = bool.Parse(ini["Main"]["enableSpindash"]);
@@ -138,6 +145,8 @@ Code "Adaptive Physics Changes" by "Trepe" does "Change Physics depending on the
 	#lib "SonicParameters"
 //
 {
+	bool isNitroBoost = IS_WORLD_FLAG(IsNitroBoost);
+	
 	if (IS_WORLD_FLAG(IsCyberSpace) && !Player.Status.IsSideView()) 	                         // If it's Cyberspace and NOT 2D
 	{
 		var SonicParametersInfo = Reflection.GetDataInfo<SonicParameters.Root>("player_common"); // Setup RFL changes for Sonic
@@ -170,6 +179,7 @@ Code "Adaptive Physics Changes" by "Trepe" does "Change Physics depending on the
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.minHSpeed, 60.0f);
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.airboost.minHSpeedMax, 60.0f);
 		}
+		
 		if (Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateSpringJump || Player.State.GetCurrentStateID<Sonic.StateID>() == Sonic.StateID.StateJumpBoardLaunch)
 		{
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.maxFallSpeed, 30.0f);
@@ -177,6 +187,35 @@ Code "Adaptive Physics Changes" by "Trepe" does "Change Physics depending on the
 		else
 		{
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.speed.maxFallSpeed, 60.0f);
+		}
+		
+		if (isNitroBoost)
+		{
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForce, 1050.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForce2, 1050.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForceSpeed, 10.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.minRotateForce, 30.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.maxRotateForce, 1850.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.frontRotateRatio, 0.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecaySpeed, 20.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecayRate, 20.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecayMax, 200.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.autorunRotateForce, 1200.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.jumpSpeed.rotationForceDecayMax, 5.75f);
+		}
+		else
+		{
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForce, 100.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForce2, 1750.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForceSpeed, 10.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.minRotateForce, 100.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.maxRotateForce, 1750.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.frontRotateRatio, 0.9f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecaySpeed, 0.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecayRate, 0.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecayMax, 0.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.autorunRotateForce, 1200.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.jumpSpeed.rotationForceDecayMax, 5.0f);
 		}
 	}
 	
@@ -575,7 +614,7 @@ Code "VFX and SFX"
 	if (!configInit)
 	{
 		// thanks Hyper for this code
-        var mods = HMM.FindModsByName("Neo Boost Controls");
+        var mods = HMM.FindModsByName("Neo Boost Gameplay");
         // Duplicates present, aborting!
         if (mods.Count > 1)
         {
@@ -584,7 +623,7 @@ Code "VFX and SFX"
             return;
         }
 		currentModDirectory = mods[0].Path;
-        var configPath = Path.Combine(mods[0].Path, "config.ini");
+        var configPath = Path.Combine(mods[0].Path, "mod.ini");
 		var ini = INI.Read(configPath);
 		
 		enableBoostSound = bool.Parse(ini["Main"]["enableBoostSound"]);
@@ -711,4 +750,442 @@ Code "VFX and SFX"
 		*/
 		
 	}
+}
+
+Code "1-1 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w6d01");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "1-2 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w8d01");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "1-4 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w6d02");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "1-5 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w7d04");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "1-7 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w9d06");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "2-2 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w8d03");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "2-4 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w7d06");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "2-6 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w6d03");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "3-1 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w6d04");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "3-3 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w8d02");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "3-5 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w6d07");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "4-1 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w7d08");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "4-2 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w9d02");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "4-3 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w7d01");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "4-4 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w9d03");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "4-5 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w6d10");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "4-7 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w9d05");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "4-8 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w7d05");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "4-9 camera"
+//
+	#include "Reflection" noemit
+
+	#lib "NeedleFxSceneData"
+//
+{
+	var NeedleFxSceneDataInfo = Reflection.GetDataInfo<NeedleFxSceneData.Root>("w9d07");
+
+	if (NeedleFxSceneDataInfo.pData == null)
+		return;
+	
+	RFL_SET_PARAM(NeedleFxSceneDataInfo, stageConfig.camera.fovy, 55);
+}
+
+Code "Hitstop Duration"
+//
+	#include "Reflection" noemit
+
+	#lib "Reflection"
+	#lib "GameHitStopParameter"
+	#lib "HMM"
+	#lib "INI"
+	
+	using System.IO;
+
+	static bool configInit = false;
+	static float hitstopDuration = 0;
+	static float nitroHitstopDuration = 10;
+	static string currentModDirectory;
+
+//
+{
+	if (!configInit)
+	{
+		// thanks Hyper for this code
+        var mods = HMM.FindModsByName("Neo Boost Gameplay");
+        // Duplicates present, aborting!
+        if (mods.Count > 1)
+        {
+            // Skip config init on next loop, use default values.
+            configInit = true;
+            return;
+        }
+		currentModDirectory = mods[0].Path;
+        var configPath = Path.Combine(mods[0].Path, "mod.ini");
+		var ini = INI.Read(configPath);
+		hitstopDuration = INI.Parse<float>(ini["Main"]["hitstopDuration"], 0);
+		nitroHitstopDuration = INI.Parse<float>(ini["Main"]["nitroHitstopDuration"], 0);
+		
+		configInit = true;
+    }
+	
+	var GameHitStopParameterInfo = Reflection.GetDataInfo<GameHitStopParameter.Root>("hitstop");
+
+	if (GameHitStopParameterInfo.pData == null)
+		return;
+	
+	if (IS_WORLD_FLAG(IsCyberSpace))
+	{
+		RFL_SET_PARAM(GameHitStopParameterInfo, data[11].time, (hitstopDuration / 100));
+		RFL_SET_PARAM(GameHitStopParameterInfo, data[44].time, (nitroHitstopDuration / 100));
+		RFL_SET_PARAM(GameHitStopParameterInfo, data[45].time, (nitroHitstopDuration / 100));
+	}
+	else
+	{
+		RFL_SET_PARAM(GameHitStopParameterInfo, data[11].time, 0.2f);
+		RFL_SET_PARAM(GameHitStopParameterInfo, data[44].time, 0.2f);
+		RFL_SET_PARAM(GameHitStopParameterInfo, data[45].time, 0.15f);
+	}
+}
+
+Library "GameHitStopParameter"
+{
+    #load "System.Numerics.dll"
+
+    using System.Numerics;
+    using System.Runtime.InteropServices;
+
+    [StructLayout(LayoutKind.Explicit, Size = 8)]
+    public struct UnmanagedString
+    {
+        [FieldOffset(0)] public long pValue;
+
+        public string Value
+        {
+            get
+            {
+                if (pValue == 0)
+                    return string.Empty;
+
+                return Marshal.PtrToStringAnsi((nint)pValue);
+            }
+
+            set => pValue = (long)Marshal.StringToHGlobalAnsi(value);
+        }
+
+        public UnmanagedString(string in_value)
+        {
+            Value = in_value;
+        }
+
+        public static implicit operator UnmanagedString(string in_value)
+        {
+            return new UnmanagedString(in_value);
+        }
+
+        public static bool operator ==(UnmanagedString in_left, string in_right)
+        {
+            return in_left.Value == in_right;
+        }
+
+        public static bool operator !=(UnmanagedString in_left, string in_right)
+        {
+            return !(in_left == in_right);
+        }
+
+        public override bool Equals(object in_obj)
+        {
+            if (in_obj is string str)
+                return Value == str;
+
+            return base.Equals(in_obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Value;
+        }
+    }
+
+    [StructLayout(LayoutKind.Explicit, Size = 0x28)]
+    public struct GameHitStopParameterData
+    {
+        [FieldOffset(0x00)] public UnmanagedString name;
+        [FieldOffset(0x10)] public float scale;
+        [FieldOffset(0x14)] public float time;
+        [FieldOffset(0x18)] public float easeOutTime;
+        [FieldOffset(0x1C)] public float delayTime;
+        [FieldOffset(0x20)] public bool layerPlayer;
+        [FieldOffset(0x21)] public bool layerEnemy;
+        [FieldOffset(0x22)] public bool layerDamagedEnemy;
+        [FieldOffset(0x23)] public bool layerCamera;
+        [FieldOffset(0x24)] public bool layerOthers;
+    }
+
+    [StructLayout(LayoutKind.Explicit, Size = 0xA00)]
+    public struct Root
+    {
+        [FieldOffset(0x00)] public unsafe fixed byte /* GameHitStopParameterData[64] */ _data[2560];
+
+        public unsafe GameHitStopParameterData* data
+        {
+            get
+            {
+                fixed (byte* p_data = _data)
+                    return (GameHitStopParameterData*)p_data;
+            }
+        }
+    }
+
 }
