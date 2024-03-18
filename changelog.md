@@ -1,3 +1,7 @@
+## Neo Boost Gameplay 1.2a
+- Added a readme to the main download.
+- Adjusted some config labels.
+
 ## Neo Boost Gameplay 1.2
 - Added an exciting new name.
 - Added a new config option for boost damage hitstop.
