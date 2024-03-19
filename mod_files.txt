@@ -34,6 +34,3 @@ add wider_fov/raw/gedit/w9d07_gedit.pac
 add wider_fov/raw/gedit/w9d21_gedit.pac
 add wider_fov/raw/gedit/w9d22_gedit.pac
 add wider_fov/raw/gedit/w9d23_gedit.pac
-delete raw/character/playercommon.pac
-delete raw/script/script_resident.pac
-delete wider_fov/raw/gedit/w6d07_gedit.pac

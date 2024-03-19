@@ -1,6 +1,12 @@
+## Neo Boost Controls 1.2.2
+- Increased the max speed of the rocket boost. It is now ~15% faster than standard boost speed.
+- Turning radius while rocket boosting has been tightened slightly.
+- The rev mechanic has been re-introduced to 4-G, with speed adjustments. Low gear is now just ~15% slower than standard boost speed, and top gear is ~15% faster.
+- Added rank timings for 3-5.
+
 ## Neo Boost Controls 1.2.1
-- Removed drift panels from 3-5 because they suck
-- Drifting physics have also been adjusted, but they're inaccessible since drift panels are gone
+- Removed drift panels from 3-5 because they suck.
+- Drifting physics have also been adjusted, but they're inaccessible since drift panels are gone.
 
 ## Neo Boost Gameplay 1.2
 - Added an exciting new name.
