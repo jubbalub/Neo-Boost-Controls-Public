@@ -9,6 +9,10 @@
 - Fixed rank timings in 3-5.
 - Re-introduced the rev mechanic to 4-G for real this time.
 
+This version introduces a big change to Sonic's handling: the turning. I was never completely happy with this mod's turning, and on a whim, I decided to try out open-zone turning. Would you believe it? It fits perfectly. It's better at tight turns and minor control adjustments at high speeds.
+
+This is a fairly major change, but it should address the feeling of jerky control and improve general gameplay. Feel free to give feedback on this change!
+
 ## Neo Boost Gameplay 1.2.2
 - Increased the max speed of the rocket boost. It is now ~15% faster than standard boost speed.
 - Turning radius while rocket boosting has been tightened slightly.
