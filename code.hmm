@@ -206,19 +206,19 @@ Code "Adaptive Physics Changes" by "Trepe" does "Change Physics depending on the
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.frontRotateRatio, 0.0f);
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecaySpeed, 20.0f);
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecayRate, 20.0f);
-			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecayMax, 200.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecayMax, 190.0f);
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.autorunRotateForce, 1200.0f);
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.jumpSpeed.rotationForceDecayMax, 5.75f);
 		}
 		else
 		{
-			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForce, 100.0f);
-			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForce2, 1750.0f);
-			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForceSpeed, 10.0f);
-			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.minRotateForce, 100.0f);
-			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.maxRotateForce, 1750.0f);
-			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.frontRotateRatio, 0.9f);
-			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecaySpeed, 0.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForce, 500.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForce2, 3500.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.baseRotateForceSpeed, 15.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.minRotateForce, 60.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.maxRotateForce, 1000.0f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.frontRotateRatio, 0.2f);
+			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecaySpeed, 30.0f);
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecayRate, 0.0f);
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.rotationForceDecayMax, 0.0f);
 			RFL_SET_PARAM(SonicParametersInfo, cyberspace.modePackage.rotation.autorunRotateForce, 1200.0f);

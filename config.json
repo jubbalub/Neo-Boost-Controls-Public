@@ -30,7 +30,7 @@
 						"Max = 15 (vanilla)"
 					],
 					"Type": "float",
-					"DefaultValue": "7",
+					"DefaultValue": "10",
 					"MinValue": "0",
 					"MaxValue": "15"
 				},
@@ -42,12 +42,12 @@
 						"",
 						"NOTE: 0 still has a very miniscule amount of hitstop.",
 						"",
-						"Default = 0",
+						"Default = 5",
 						"Min = 0 (none)",
 						"Max = 20 (vanilla)"
 					],
 					"Type": "float",
-					"DefaultValue": "0",
+					"DefaultValue": "5",
 					"MinValue": "0",
 					"MaxValue": "20"
 				},
