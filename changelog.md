@@ -1,4 +1,7 @@
 ## Neo Boost Gameplay 1.3
+NOTICE: A recommended feature has been adjusted.
+- Set "Maintain boost during a jump" to OFF.
+
 - Sonic's ground control and turning is now identical to the open-zone.
 	- This can take some time to get used to, but it should address the jerky control complaints while still staying controllable at high speeds. Please give feedback on this change!
 - Sonic's wall jump has been sped up.
