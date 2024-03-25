@@ -1,6 +1,8 @@
 ## Neo Boost Gameplay 1.3
-- Sonic's ground control and turning is now identical to the open-zone. This can take some time to get used to, but it should address the jerky control complaints while still staying controllable at high speeds. Please give feedback on this change!
+- Sonic's ground control and turning is now identical to the open-zone.
+	- This can take some time to get used to, but it should address the jerky control complaints while still staying controllable at high speeds. Please give feedback on this change!
 - Sonic's wall jump has been sped up.
+- Sonic's homing attack has been slowed down slightly.
 - Changed default boost damage hitstop from 0 to 5.
 - Properly set default Nitro bottle hitstop to 10 instead of 7.
 - Fixed rank timings in 3-5.
